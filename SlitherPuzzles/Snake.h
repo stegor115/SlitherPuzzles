@@ -4,7 +4,16 @@ class Snake {
 public:
 	Snake();
 	~Snake();
-
+	//Set/Get X and Y
+	void setHeadX(int value);
+	void setHeadY(int value);
+	int getHeadX();
+	int getHeadY();
+	//Size
+	void setSize(int value);
+	int getSize();
+	
+	SDL_Rect* getHead();
 private:
 	SDL_Rect snakeHead;
 	int tailLength;

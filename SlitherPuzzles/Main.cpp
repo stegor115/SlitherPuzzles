@@ -8,7 +8,7 @@ int main() {
 	int WINDOW_WIDTH = 600;
 	int WINDOW_HEIGHT = 600;
 	game = new Game();
-	game->init("Slithery Slimey", WINDOW_WIDTH, WINDOW_HEIGHT);
+	game->init("Slither Puzzles", WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	while (game->running()) {
 		game->handleEvents();

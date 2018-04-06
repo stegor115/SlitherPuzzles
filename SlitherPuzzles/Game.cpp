@@ -18,20 +18,33 @@ void Game::init(const char* title, int width, int height) {
 		if (renderer) {
 			startGame();
 		}//end renderer if
-		this->isRunning = true;
+		isRunning = true;
 	}//end init if
 } //end init
 
 void Game::startGame() {
-
+	playerSnake->setHeadX(400);
+	playerSnake->setHeadY(400);
+	playerSnake->setSize(25);
 }
 
 void Game::handleEvents() {
-
+	SDL_Event event;
+	SDL_PollEvent(&event);
+	switch (event.type) {
+	case SDL_QUIT:
+		isRunning = false;
+	}
 }
 
 void Game::update() { //Each frame
-
+	//Clear Screen
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Sets color to black
+	SDL_RenderClear(renderer); //Clears screen
+	//Draw snake rectangle
+	SDL_SetRenderDrawColor(renderer, 0, 100, 0, 0); //Sets color to green
+	SDL_RenderFillRect(renderer, playerSnake->getHead()); //Sets up rectangle to render
+	SDL_RenderPresent(renderer); //Renders
 }
 
 bool Game::running(){
