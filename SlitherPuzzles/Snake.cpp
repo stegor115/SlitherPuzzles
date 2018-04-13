@@ -37,3 +37,12 @@ int Snake::getSize() {
 SDL_Rect* Snake::getHead() {
 	return &this->snakeHead;
 }
+
+//Velocity
+void Snake::setVelocity(int value) {
+	this->velocity = value;
+}
+
+int Snake::getVelocity() {
+	return this->velocity;
+}

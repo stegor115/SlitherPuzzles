@@ -13,10 +13,13 @@ public:
 	void update();
 	bool running();
 	void clean();
+	Uint32 timer();
 private:
 	bool isRunning = false;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	int windowWidth = 0;
 	int windowHeight = 0;
+	//FPS
+	Uint32 startTime;
 };
