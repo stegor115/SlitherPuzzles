@@ -71,7 +71,7 @@ void Game::handleEvents() {
 			} //end if
 			break;
 		} //end inner switch statement
-		break; //Stops run on to SDL_QUIT
+		break; //Stops potential run on to SDL_QUIT
 	case SDL_QUIT:
 		isRunning = false;
 		break;
@@ -81,6 +81,13 @@ void Game::handleEvents() {
 }
 
 void Game::update() { //Each frame
+	//Get Tail information
+	for (int i = 0; i < playerSnake->getTailLength(); ++i) {
+		playerSnake->setRect2Rect(playerSnake->getTail(i), playerSnake->getTail(i + 1));
+	}
+	if (playerSnake->getTailLength() != 0) {
+		playerSnake->setRect2Rect(playerSnake->getTail(playerSnake->getTailLength() - 1), playerSnake->getHead());
+	}
 	//Clear Screen
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Sets color to black
 	SDL_RenderClear(renderer); //Clears screen
@@ -91,6 +98,14 @@ void Game::update() { //Each frame
 	//Draw snake rectangle
 	SDL_SetRenderDrawColor(renderer, 0, 100, 0, 0); //Sets color to green
 	SDL_RenderFillRect(renderer, playerSnake->getHead()); //Sets up rectangle to render
+	//Draw snake tail
+	for (int i = 0; i < playerSnake->getTailLength(); ++i) {
+		//std::cout << "tailX = " << this->snakeTail[i].x << " tailY = " << this->snakeTail[i].y << std::endl;
+		SDL_SetRenderDrawColor(renderer, 0, 100, 0, 0); //Sets color to green
+		SDL_RenderFillRect(renderer, playerSnake->getTail(i)); //Sets up rectangle to render
+		//Debug lines
+		std::cout << "Tail Piece = " << i << " TailX = " << playerSnake->getTailX(i) << " TailY = " << playerSnake->getTailY(i) << std::endl;
+	} //end for
 	SDL_RenderPresent(renderer); //Renders
 }
 

@@ -15,13 +15,31 @@ void Snake::setHeadY(int value) {
 	this->snakeHead.y = value;
 }
 
-//Get X/Y
+//Get X/Y of Head
 int Snake::getHeadX() {
 	return this->snakeHead.x;
 }
 
 int Snake::getHeadY() {
 	return this->snakeHead.y;
+}
+
+//Set X/Y of Tail
+void Snake::setTailX(int pos, int value) {
+	this->snakeTail[pos].x = value;
+}
+
+void Snake::setTailY(int pos, int value) {
+	this->snakeTail[pos].y = value;
+}
+
+//Get X/Y of Tail
+int Snake::getTailX(int pos) {
+	return this->snakeTail[pos].x;
+}
+
+int Snake::getTailY(int pos) {
+	return this->snakeTail[pos].y;
 }
 
 //Size handling
@@ -34,8 +52,26 @@ int Snake::getSize() {
 	return this->snakeHead.w; //Same as height
 }
 
+//Get Rects
 SDL_Rect* Snake::getHead() {
 	return &this->snakeHead;
+}
+
+SDL_Rect* Snake::getTail(int pos) {
+	return &this->snakeTail[pos];
+}
+
+//Set Rects
+void Snake::setRect2Rect(SDL_Rect* first, SDL_Rect* second) {
+	first->x = second->x;
+	first->y = second->y;
+	first->w = second->w;
+	first->h = second->h;
+}
+
+//Get Tail Length
+int Snake::getTailLength() {
+	return this->tailLength;
 }
 
 //Velocity
