@@ -43,36 +43,108 @@ void Game::startGame() {
 void Game::handleEvents() {
 	SDL_Event event;
 	SDL_PollEvent(&event);
+	bool tailObstruct = false;
+	bool tailClimb = false;
 	switch (event.type) {
 	case SDL_KEYDOWN: //Key pressed
 		switch (event.key.keysym.sym) {
-		/*case SDLK_w: //This eventually needs to be removed, to go up, the snake needs to go backward onto itself
+		case SDLK_w: //This eventually needs to be removed, to go up, the snake needs to go backward onto itself
 		case SDLK_UP:
 			if (playerSnake->getHeadY() - playerSnake->getVelocity() >= 0) { //Check off screen
 				eventOccured();
 				playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
 			} //end if
-			break;*/
+			break;
 		case SDLK_s:
 		case SDLK_DOWN:
 			if (playerSnake->getHeadY() + playerSnake->getVelocity() < this->windowHeight) { //Check off screen
-				eventOccured();
-				playerSnake->setHeadY(playerSnake->getHeadY() + playerSnake->getVelocity());
+				for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
+					if (playerSnake->getHeadY() + playerSnake->getVelocity() == playerSnake->getTailY(i)
+						&& playerSnake->getHeadX() == playerSnake->getTailX(i)) {
+						std::cout << "Downward movement obstructed by tail." << std::endl;
+						tailObstruct = true;
+					} //end if
+				} //end for
+				if (!tailObstruct) {
+					eventOccured();
+					playerSnake->setHeadY(playerSnake->getHeadY() + playerSnake->getVelocity());
+				} //end tail obstruction if
 			} //end if
 			break;
 		case SDLK_a:
 		case SDLK_LEFT:
+			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The mechanic of the snake climbing it's own tail is here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			if (playerSnake->getHeadX() - playerSnake->getVelocity() >= 0) { //Check off screen
-				eventOccured();
-				playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
+				for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
+					if (playerSnake->getHeadX() - playerSnake->getVelocity() == playerSnake->getTailX(i)) {
+						if (playerSnake->getHeadY() - playerSnake->getVelocity() == playerSnake->getTailY(i)) {
+							std::cout << "Leftward movement obstructed by tail." << std::endl;
+							tailObstruct = true;
+						} //end if
+						else {
+							if (playerSnake->getHeadX() - playerSnake->getVelocity() == playerSnake->getTailX(i)
+								&& playerSnake->getHeadY() == playerSnake->getTailY(i)
+								&& !tailObstruct) {
+								tailClimb = true;
+							}
+						} //end else
+					} //end if
+				} //end for
+				if (tailClimb) {
+					eventOccured();
+					playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
+					playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
+					std::cout << "Climbed tail via leftward movement." << std::endl;
+				} //end if
+				else if (!tailObstruct) {
+					eventOccured();
+					playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
+				} //end if
 			} //end if
 			break;
 		case SDLK_d:
 		case SDLK_RIGHT:
+			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The mechanic of the snake climbing it's own tail is here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			if (playerSnake->getHeadX() + playerSnake->getVelocity() < this->windowWidth) { //Check off screen
-				eventOccured();
-				playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
+				for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
+					if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)) {
+						if (playerSnake->getHeadY() - playerSnake->getVelocity() == playerSnake->getTailY(i)) {
+							std::cout << "Rightward movement obstructed by tail." << std::endl;
+							tailObstruct = true;
+						} //end if
+						else {
+							if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)
+								&& playerSnake->getHeadY() == playerSnake->getTailY(i)
+								&& !tailObstruct) {
+								tailClimb = true;
+							}
+						} //end else
+					} //end if
+				} //end for
+				if (tailClimb) {
+					eventOccured();
+					playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
+					playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
+					std::cout << "Climbed tail via rightward movement." << std::endl;
+				} //end if
+				else if (!tailObstruct) {
+					eventOccured();
+					playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
+				} //end if
 			} //end if
+			/*if (playerSnake->getHeadX() + playerSnake->getVelocity() < this->windowWidth) { //Check off screen
+				for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
+					if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)
+						&& playerSnake->getHeadY() == playerSnake->getTailY(i)) {
+						std::cout << "Rightward movement obstructed by tail." << std::endl;
+						tailObstruct = true;
+					} //end if
+				} //end for
+				if (!tailObstruct) {
+					eventOccured();
+					playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
+				} //end if
+			} //end if*/
 			break;
 		} //end inner switch statement
 		break; //Stops potential run on to SDL_QUIT
