@@ -10,6 +10,7 @@ public:
 	void init(const char* title, int width, int height); //Game window
 	void startGame();
 	void handleEvents();
+	void eventOccured();
 	void update();
 	bool running();
 	void clean();

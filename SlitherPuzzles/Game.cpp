@@ -48,24 +48,28 @@ void Game::handleEvents() {
 		switch (event.key.keysym.sym) {
 		case SDLK_w: //This eventually needs to be removed, to go up, the snake needs to go backward onto itself
 		case SDLK_UP:
+			eventOccured();
 			if (playerSnake->getHeadY() - playerSnake->getVelocity() >= 0) { //Check off screen
 				playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
 			} //end if
 			break;
 		case SDLK_s:
 		case SDLK_DOWN:
+			eventOccured();
 			if (playerSnake->getHeadY() + playerSnake->getVelocity() < this->windowHeight) { //Check off screen
 				playerSnake->setHeadY(playerSnake->getHeadY() + playerSnake->getVelocity());
 			} //end if
 			break;
 		case SDLK_a:
 		case SDLK_LEFT:
+			eventOccured();
 			if (playerSnake->getHeadX() - playerSnake->getVelocity() >= 0) { //Check off screen
 				playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
 			} //end if
 			break;
 		case SDLK_d:
 		case SDLK_RIGHT:
+			eventOccured();
 			if (playerSnake->getHeadX() + playerSnake->getVelocity() < this->windowWidth) { //Check off screen
 				playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
 			} //end if
@@ -80,14 +84,24 @@ void Game::handleEvents() {
 	} //end outer switch statement
 }
 
-void Game::update() { //Each frame
-	//Get Tail information
+void Game::eventOccured() { //Meant to handle tail information of the snake
 	for (int i = 0; i < playerSnake->getTailLength(); ++i) {
 		playerSnake->setRect2Rect(playerSnake->getTail(i), playerSnake->getTail(i + 1));
 	}
 	if (playerSnake->getTailLength() != 0) {
 		playerSnake->setRect2Rect(playerSnake->getTail(playerSnake->getTailLength() - 1), playerSnake->getHead());
 	}
+}
+
+void Game::update() { //Each frame
+	//Get Tail information
+	/*
+	for (int i = 0; i < playerSnake->getTailLength(); ++i) {
+		playerSnake->setRect2Rect(playerSnake->getTail(i), playerSnake->getTail(i + 1));
+	}
+	if (playerSnake->getTailLength() != 0) {
+		playerSnake->setRect2Rect(playerSnake->getTail(playerSnake->getTailLength() - 1), playerSnake->getHead());
+	}*/
 	//Clear Screen
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Sets color to black
 	SDL_RenderClear(renderer); //Clears screen
@@ -96,7 +110,7 @@ void Game::update() { //Each frame
 	SDL_RenderFillRect(renderer, foodGoal->getFood()); //Sets up rectangle to render
 	//SDL_RenderPresent(renderer); //Renders
 	//Draw snake rectangle
-	SDL_SetRenderDrawColor(renderer, 0, 100, 0, 0); //Sets color to green
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 0); //Sets color to green
 	SDL_RenderFillRect(renderer, playerSnake->getHead()); //Sets up rectangle to render
 	//Draw snake tail
 	for (int i = 0; i < playerSnake->getTailLength(); ++i) {
@@ -104,7 +118,7 @@ void Game::update() { //Each frame
 		SDL_SetRenderDrawColor(renderer, 0, 100, 0, 0); //Sets color to green
 		SDL_RenderFillRect(renderer, playerSnake->getTail(i)); //Sets up rectangle to render
 		//Debug lines
-		std::cout << "Tail Piece = " << i << " TailX = " << playerSnake->getTailX(i) << " TailY = " << playerSnake->getTailY(i) << std::endl;
+		//std::cout << "Tail Piece = " << i << " TailX = " << playerSnake->getTailX(i) << " TailY = " << playerSnake->getTailY(i) << std::endl;
 	} //end for
 	SDL_RenderPresent(renderer); //Renders
 }
