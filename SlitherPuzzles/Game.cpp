@@ -14,6 +14,9 @@ Game::Game() {
 Game::~Game() {
 }
 
+//TO-DO-------------------------------------------------------------------------------
+// Fix bug that does not allow snake to travel right or left when immediate left/right is open (no climb), this bug can trap the snake if not fixed.
+//------------------------------------------------------------------------------------
 void Game::init(const char* title, int width, int height) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
@@ -48,13 +51,13 @@ void Game::handleEvents() {
 	switch (event.type) {
 	case SDL_KEYDOWN: //Key pressed
 		switch (event.key.keysym.sym) {
-		case SDLK_w: //This eventually needs to be removed, to go up, the snake needs to go backward onto itself
+		/*case SDLK_w: //This eventually needs to be removed, to go up, the snake needs to go backward onto itself
 		case SDLK_UP:
 			if (playerSnake->getHeadY() - playerSnake->getVelocity() >= 0) { //Check off screen
 				eventOccured();
 				playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
 			} //end if
-			break;
+			break;*/
 		case SDLK_s:
 		case SDLK_DOWN:
 			if (playerSnake->getHeadY() + playerSnake->getVelocity() < this->windowHeight) { //Check off screen
