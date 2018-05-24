@@ -4,17 +4,23 @@
 #include "Game.h"
 #include "Snake.h"
 #include "Food.h"
+#include "Map.h"
 
 Snake *playerSnake = new Snake();
 Food *foodGoal = new Food();
+Map *myMap = new Map();
 
 Game::Game() {
 }
 
 Game::~Game() {
 }
-
 //TO-DO-------------------------------------------------------------------------------
+// Add check collision in Map.
+// Add gravity
+//------------------------------------------------------------------------------------
+
+//KNOWN BUGS-------------------------------------------------------------------------------
 // Fix bug that does not allow snake to travel right or left when immediate left/right is open (no climb), this bug can trap the snake if not fixed.
 //------------------------------------------------------------------------------------
 void Game::init(const char* title, int width, int height) {
@@ -40,6 +46,8 @@ void Game::startGame() {
 	foodGoal->setX(575);
 	foodGoal->setY(400);
 	foodGoal->setSize(25);
+	//Stage
+	myMap->stageOne();
 	this->startTime = SDL_GetTicks();
 }
 
@@ -135,19 +143,6 @@ void Game::handleEvents() {
 					playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
 				} //end if
 			} //end if
-			/*if (playerSnake->getHeadX() + playerSnake->getVelocity() < this->windowWidth) { //Check off screen
-				for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
-					if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)
-						&& playerSnake->getHeadY() == playerSnake->getTailY(i)) {
-						std::cout << "Rightward movement obstructed by tail." << std::endl;
-						tailObstruct = true;
-					} //end if
-				} //end for
-				if (!tailObstruct) {
-					eventOccured();
-					playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
-				} //end if
-			} //end if*/
 			break;
 		} //end inner switch statement
 		break; //Stops potential run on to SDL_QUIT
@@ -172,6 +167,11 @@ void Game::update() { //Each frame
 	//Clear Screen
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Sets color to black
 	SDL_RenderClear(renderer); //Clears screen
+	//Draw Stage
+	for (int i = 0; i < myMap->getRectCount(); ++i) {
+		SDL_SetRenderDrawColor(renderer, 0, 0, 200, 0);
+		SDL_RenderFillRect(renderer, myMap->getRect(i)); //Hardcoded zero for testing purposes
+	}
 	//Draw food/goal rectangle
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0); //Sets color to green
 	SDL_RenderFillRect(renderer, foodGoal->getFood()); //Sets up rectangle to render
@@ -180,7 +180,6 @@ void Game::update() { //Each frame
 	SDL_RenderFillRect(renderer, playerSnake->getHead()); //Sets up rectangle to render
 	//Draw snake tail
 	for (int i = 0; i < playerSnake->getTailLength(); ++i) {
-		//std::cout << "tailX = " << this->snakeTail[i].x << " tailY = " << this->snakeTail[i].y << std::endl;
 		SDL_SetRenderDrawColor(renderer, 0, 100, 0, 0); //Sets color to green
 		SDL_RenderFillRect(renderer, playerSnake->getTail(i)); //Sets up rectangle to render
 	} //end for
