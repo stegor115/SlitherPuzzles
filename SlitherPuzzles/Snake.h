@@ -14,12 +14,16 @@ public:
 	int getTailX(int pos);
 	int getTailY(int pos);
 	int getTailLength();
+	void hideTail();
 	//Size
 	void setSize(int value);
 	int getSize();
 	//Speed
 	void setVelocity(int value);
 	int getVelocity();
+	//Spawn
+	void spawn(); //Default spawn location
+	void spawn(int xPos, int yPos); //Customizable spawn location if desired
 	//Get Rects
 	SDL_Rect* getHead();
 	SDL_Rect* getTail(int pos); //pos = part of tail

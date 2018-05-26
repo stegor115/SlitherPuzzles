@@ -1,3 +1,4 @@
+#include <iostream>
 #include "SDL.h"
 class Map {
 public:
@@ -15,6 +16,13 @@ public:
 	//Check collision
 	bool checkOccupied(int xPos, int yPos); //Use: Input wanted path to travel
 private:
+	//Current stage
+	int currentStage = 0; 
+	//Level complete booleans
+	bool stageOneComplete = false;
+	bool stageTwoComplete = false;
+	//Rectangle info
 	int rectCount = 10;
+	int activeRects = 0;
 	SDL_Rect mapRects[10]; //Increase as needed
 };

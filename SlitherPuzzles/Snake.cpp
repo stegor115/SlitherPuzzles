@@ -74,6 +74,14 @@ int Snake::getTailLength() {
 	return this->tailLength;
 }
 
+//Hide Snake Tail
+void Snake::hideTail() {
+	for (int i = 0; i < getTailLength(); ++i) {
+		setTailX(i, -100);
+		setTailY(i, -100);
+	} //end for
+}
+
 //Velocity
 void Snake::setVelocity(int value) {
 	this->velocity = value;
@@ -81,4 +89,19 @@ void Snake::setVelocity(int value) {
 
 int Snake::getVelocity() {
 	return this->velocity;
+}
+
+//Spawn
+void Snake::spawn() { //Always spawns snake in the same position
+	setHeadX(0);
+	setHeadY(400);
+	setSize(25);
+	setVelocity(25);
+}
+
+void Snake::spawn(int xPos, int yPos) { //Spawns snake in a custom position if desired
+	setHeadX(xPos);
+	setHeadY(yPos);
+	setSize(25);
+	setVelocity(25);
 }

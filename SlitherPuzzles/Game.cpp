@@ -16,7 +16,6 @@ Game::Game() {
 Game::~Game() {
 }
 //TO-DO-------------------------------------------------------------------------------
-// Add check collision in Map.
 // Add gravity
 //------------------------------------------------------------------------------------
 
@@ -38,10 +37,7 @@ void Game::init(const char* title, int width, int height) {
 
 void Game::startGame() {
 	//Snake
-	playerSnake->setHeadX(0);
-	playerSnake->setHeadY(400);
-	playerSnake->setSize(25);
-	playerSnake->setVelocity(25);
+	playerSnake->spawn();
 	//Food
 	foodGoal->setX(575);
 	foodGoal->setY(400);
@@ -69,80 +65,91 @@ void Game::handleEvents() {
 		case SDLK_s:
 		case SDLK_DOWN:
 			if (playerSnake->getHeadY() + playerSnake->getVelocity() < this->windowHeight) { //Check off screen
-				for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
-					if (playerSnake->getHeadY() + playerSnake->getVelocity() == playerSnake->getTailY(i)
-						&& playerSnake->getHeadX() == playerSnake->getTailX(i)) {
-						std::cout << "Downward movement obstructed by tail." << std::endl;
-						tailObstruct = true;
-					} //end if
-				} //end for
-				if (!tailObstruct) {
-					eventOccured();
-					playerSnake->setHeadY(playerSnake->getHeadY() + playerSnake->getVelocity());
-				} //end tail obstruction if
-			} //end if
+				if (!myMap->checkOccupied(playerSnake->getHeadX(), playerSnake->getHeadY() + playerSnake->getVelocity())) { //Check if map is in the way
+					for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
+						if (playerSnake->getHeadY() + playerSnake->getVelocity() == playerSnake->getTailY(i)
+							&& playerSnake->getHeadX() == playerSnake->getTailX(i)) {
+							std::cout << "Downward movement obstructed by tail." << std::endl;
+							tailObstruct = true;
+						} //end if
+					} //end for
+					if (!tailObstruct) {
+						eventOccured();
+						playerSnake->setHeadY(playerSnake->getHeadY() + playerSnake->getVelocity());
+					} //end tail obstruction if
+				} //end map collision if
+			} //end off-screen if
 			break;
 		case SDLK_a:
 		case SDLK_LEFT:
 			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The mechanic of the snake climbing it's own tail is here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			if (playerSnake->getHeadX() - playerSnake->getVelocity() >= 0) { //Check off screen
-				for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
-					if (playerSnake->getHeadX() - playerSnake->getVelocity() == playerSnake->getTailX(i)) {
-						if (playerSnake->getHeadY() - playerSnake->getVelocity() == playerSnake->getTailY(i)) {
-							std::cout << "Leftward movement obstructed by tail." << std::endl;
-							tailObstruct = true;
+				if (!myMap->checkOccupied(playerSnake->getHeadX() - playerSnake->getVelocity(), playerSnake->getHeadY())) { //Check if map is in the way
+					for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
+						if (playerSnake->getHeadX() - playerSnake->getVelocity() == playerSnake->getTailX(i)) {
+							if (playerSnake->getHeadY() - playerSnake->getVelocity() == playerSnake->getTailY(i)) {
+								std::cout << "Leftward movement obstructed by tail." << std::endl;
+								tailObstruct = true;
+							} //end if
+							else {
+								if (playerSnake->getHeadX() - playerSnake->getVelocity() == playerSnake->getTailX(i)
+									&& playerSnake->getHeadY() == playerSnake->getTailY(i)
+									&& !tailObstruct) {
+									tailClimb = true;
+								}
+							} //end else
 						} //end if
-						else {
-							if (playerSnake->getHeadX() - playerSnake->getVelocity() == playerSnake->getTailX(i)
-								&& playerSnake->getHeadY() == playerSnake->getTailY(i)
-								&& !tailObstruct) {
-								tailClimb = true;
-							}
-						} //end else
+					} //end for
+					if (tailClimb) {
+						eventOccured();
+						playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
+						playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
+						std::cout << "Climbed tail via leftward movement." << std::endl;
 					} //end if
-				} //end for
-				if (tailClimb) {
-					eventOccured();
-					playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
-					playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
-					std::cout << "Climbed tail via leftward movement." << std::endl;
-				} //end if
-				else if (!tailObstruct) {
-					eventOccured();
-					playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
-				} //end if
-			} //end if
+					else if (!tailObstruct) {
+						eventOccured();
+						playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
+					} //end if
+				} //end map collision if
+			} //end off screen if
 			break;
 		case SDLK_d:
 		case SDLK_RIGHT:
 			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The mechanic of the snake climbing it's own tail is here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			if (playerSnake->getHeadX() + playerSnake->getVelocity() < this->windowWidth) { //Check off screen
-				for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
-					if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)) {
-						if (playerSnake->getHeadY() - playerSnake->getVelocity() == playerSnake->getTailY(i)) {
-							std::cout << "Rightward movement obstructed by tail." << std::endl;
-							tailObstruct = true;
+				if (!myMap->checkOccupied(playerSnake->getHeadX() + playerSnake->getVelocity(), playerSnake->getHeadY())) { //Check if map is in the way
+					for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
+						if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)) {
+							if (playerSnake->getHeadY() - playerSnake->getVelocity() == playerSnake->getTailY(i)) {
+								std::cout << "Rightward movement obstructed by tail." << std::endl;
+								tailObstruct = true;
+							} //end if
+							else {
+								if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)
+									&& playerSnake->getHeadY() == playerSnake->getTailY(i)
+									&& !tailObstruct) {
+									tailClimb = true;
+								}
+							} //end else
 						} //end if
-						else {
-							if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)
-								&& playerSnake->getHeadY() == playerSnake->getTailY(i)
-								&& !tailObstruct) {
-								tailClimb = true;
-							}
-						} //end else
+					} //end for
+					if (tailClimb) {
+						eventOccured();
+						playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
+						playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
+						std::cout << "Climbed tail via rightward movement." << std::endl;
 					} //end if
-				} //end for
-				if (tailClimb) {
-					eventOccured();
-					playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
-					playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
-					std::cout << "Climbed tail via rightward movement." << std::endl;
-				} //end if
-				else if (!tailObstruct) {
-					eventOccured();
-					playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
-				} //end if
-			} //end if
+					else if (!tailObstruct) {
+						eventOccured();
+						playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
+					} //end if
+				} //end map collision if
+			} //end off screen if
+			break;
+		case SDLK_r:
+			//Restart Level
+			playerSnake->spawn();
+			playerSnake->hideTail();
 			break;
 		} //end inner switch statement
 		break; //Stops potential run on to SDL_QUIT
