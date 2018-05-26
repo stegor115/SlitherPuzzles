@@ -17,7 +17,8 @@ void Map::stageOne() {
 	generateRect(0, 425, 600, 175, 0);
 	//Center blocking rectangle
 	generateRect(250, 400, 100, 25, 1);
-	this->activeRects = 2;
+	generateRect(275, 375, 50, 25, 2);
+	this->activeRects = 3;
 	this->currentStage = 1;
 }
 
