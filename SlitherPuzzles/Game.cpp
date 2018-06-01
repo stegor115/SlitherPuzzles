@@ -56,13 +56,15 @@ void Game::handleEvents() {
 	switch (event.type) {
 	case SDL_KEYDOWN: //Key pressed
 		switch (event.key.keysym.sym) {
-		/*case SDLK_w: //This eventually needs to be removed, to go up, the snake needs to go backward onto itself
+		case SDLK_w: //Debug movement to go upward
 		case SDLK_UP:
-			if (playerSnake->getHeadY() - playerSnake->getVelocity() >= 0) { //Check off screen
-				eventOccured();
-				playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
-			} //end if
-			break;*/
+			if (this->devMode) { //Only possible if Dev mode is on
+				if (playerSnake->getHeadY() - playerSnake->getVelocity() >= 0) { //Check off screen
+					eventOccured();
+					playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
+				} //end if
+			}
+			break;
 		case SDLK_s:
 		case SDLK_DOWN:
 			if (playerSnake->getHeadY() + playerSnake->getVelocity() < this->windowHeight) { //Check off screen
@@ -152,6 +154,14 @@ void Game::handleEvents() {
 			playerSnake->spawn();
 			playerSnake->hideTail();
 			break;
+		case SDLK_BACKQUOTE:
+			/*
+			List of Activated Actions-----------------------------
+			Movement Up via W or Up Arrow
+			List of Activated Commands----------------------------
+			None Yet
+			*/
+			toggleDev();
 		} //end inner switch statement
 		break; //Stops potential run on to SDL_QUIT
 	case SDL_QUIT:
@@ -160,6 +170,12 @@ void Game::handleEvents() {
 	default:
 		break;
 	} //end outer switch statement
+
+	//Special Events-----------------------------------------
+	if (foodGoal->gotFood(playerSnake->getHeadX(), playerSnake->getHeadY())) {
+		myMap->switchStage();
+		playerSnake->spawn();
+	} //end if
 }
 
 void Game::eventOccured() { //Meant to handle tail information of the snake
@@ -196,6 +212,17 @@ void Game::update() { //Each frame
 
 bool Game::running(){
 	return this->isRunning;
+}
+
+void Game::toggleDev() {
+	if (this->devMode == false) {
+		this->devMode = true;
+		std::cout << "Developer Mode toggled ON" << std::endl;
+	} //end if
+	else {
+		this->devMode = false;
+		std::cout << "Developer Mode toggled OFF" << std::endl;
+	} //end else
 }
 
 void Game::clean() {

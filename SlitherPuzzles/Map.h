@@ -7,6 +7,7 @@ public:
 	//Map generation
 	void stageOne();
 	void stageTwo();
+	void switchStage();
 	void clearRects(); //Throws rects off screen to be rearranged
 	void generateRect(int xPos, int yPos, int width, int height, int pos);
 	void generateUnused(int num); //num is the first rect in the array to not be used, will throw rest of rects off screen.

@@ -26,6 +26,14 @@ int Food::getY() {
 	return this->foodRect.y;
 }
 
+//Food retrieval
+bool Food::gotFood(int xPos, int yPos) { //xPos and yPos are from the Snake Head
+	if (xPos == this->foodRect.x && yPos == this->foodRect.y) {
+		return true;
+	} //end if
+	return false;
+}
+
 //Size handling
 void Food::setSize(int value) {
 	this->foodRect.w = value;

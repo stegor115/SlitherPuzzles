@@ -13,10 +13,12 @@ public:
 	void eventOccured();
 	void update();
 	bool running();
+	void toggleDev();
 	void clean();
 	Uint32 timer();
 private:
 	bool isRunning = false;
+	bool devMode = false;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	int windowWidth = 0;

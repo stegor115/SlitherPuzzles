@@ -11,6 +11,7 @@ Map::~Map() {
 //Snake almost always starts at x = 0, y = 400
 //This might be different depending on the level
 //Window Info: 600x600
+//Important Note: Active Rects needs to be correct, otherwise the snake has no collision detection of preceding rectangles.
 //Map generation
 void Map::stageOne() {
 	//First rectangle
@@ -23,7 +24,25 @@ void Map::stageOne() {
 }
 
 void Map::stageTwo() {
+	//Ground level rectangle
+	generateRect(0, 425, 600, 175, 0);
+	//Temporary Massive Blocking Rectangle
+	generateRect(150, 0, 300, 450, 1);
+	this->activeRects = 2;
 	this->currentStage = 2;
+}
+
+void Map::switchStage() {
+	clearRects();
+	switch (this->currentStage) {
+	case 1:
+		stageTwo();
+		break;
+	default:
+		std::cout << "Something went very wrong, or the level is not yet implemented." << std::endl;
+		break;
+	} //end switch statement
+	std::cout << "Level "<< this->currentStage << " Loaded" << std::endl;
 }
 
 void Map::clearRects() { //Throws rectangles off screen

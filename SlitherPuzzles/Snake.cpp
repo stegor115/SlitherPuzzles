@@ -97,6 +97,7 @@ void Snake::spawn() { //Always spawns snake in the same position
 	setHeadY(400);
 	setSize(25);
 	setVelocity(25);
+	hideTail();
 }
 
 void Snake::spawn(int xPos, int yPos) { //Spawns snake in a custom position if desired
@@ -104,4 +105,5 @@ void Snake::spawn(int xPos, int yPos) { //Spawns snake in a custom position if d
 	setHeadY(yPos);
 	setSize(25);
 	setVelocity(25);
+	hideTail(); //This might look weird if not spawned on the edge of the screen, might need a solution?
 }
