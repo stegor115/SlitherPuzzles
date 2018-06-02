@@ -22,6 +22,7 @@ Game::~Game() {
 
 //KNOWN BUGS-------------------------------------------------------------------------------
 // Fix bug that does not allow snake to travel right or left when immediate left/right is open (no climb), this bug can trap the snake if not fixed.
+// It's possible to climb on the snake's tail and go through the map if a part of the map is above the snake.
 //------------------------------------------------------------------------------------
 void Game::init(const char* title, int width, int height) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
@@ -159,10 +160,18 @@ void Game::handleEvents() {
 			List of Activated Actions-----------------------------
 			Movement Up via W or Up Arrow
 			List of Activated Commands----------------------------
-			None Yet
+			help
+			map <number>
 			*/
 			toggleDev();
+			break;
+		case SDLK_RETURN: //Enter Key
+			if (this->devMode) {
+				issueCommand();
+			} //end if
+			break;
 		} //end inner switch statement
+
 		break; //Stops potential run on to SDL_QUIT
 	case SDL_QUIT:
 		isRunning = false;
@@ -223,6 +232,36 @@ void Game::toggleDev() {
 		this->devMode = false;
 		std::cout << "Developer Mode toggled OFF" << std::endl;
 	} //end else
+}
+
+void Game::issueCommand() {
+	std::string command;
+	int num;
+	std::cout << "Enter Command:" << std::endl;
+	std::cin >> command;
+	if (command == "map") { //Manual map switching
+		std::cin >> num;
+		if (num == 1) {
+			myMap->clearRects();
+			myMap->stageOne();
+			std::cout << "Stage " << num << " Loaded" << std::endl;
+		} //end if
+		else if (num == 2) {
+			myMap->clearRects();
+			myMap->stageTwo();
+			std::cout << "Stage " << num << " Loaded" << std::endl;
+		} //end else if
+		else {
+			std::cout << "Stage " << num << " does not exist." << std::endl;
+		}
+	}//end map if
+	else if (command == "help") { //Command List
+		std::cout << "help - Provides list of all available commands." << std::endl;
+		std::cout << "map <number> - Loads map based on the number." << std::endl;
+	} //end help if
+	else {
+		std::cout << "Command does not exist. Use 'help' for a list." << std::endl;
+	}
 }
 
 void Game::clean() {

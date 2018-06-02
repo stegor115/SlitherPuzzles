@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <string> //Used for command input
 #include <SDL.h>
 
 class Game {
@@ -14,6 +15,7 @@ public:
 	void update();
 	bool running();
 	void toggleDev();
+	void issueCommand();
 	void clean();
 	Uint32 timer();
 private:

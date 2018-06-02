@@ -23,7 +23,7 @@ private:
 	bool stageOneComplete = false;
 	bool stageTwoComplete = false;
 	//Rectangle info
-	int rectCount = 10;
+	int rectCount = 20;
 	int activeRects = 0;
-	SDL_Rect mapRects[10]; //Increase as needed
+	SDL_Rect mapRects[20]; //Increase as needed
 };

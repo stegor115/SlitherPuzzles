@@ -27,8 +27,9 @@ void Map::stageTwo() {
 	//Ground level rectangle
 	generateRect(0, 425, 600, 175, 0);
 	//Temporary Massive Blocking Rectangle
-	generateRect(150, 0, 300, 450, 1);
-	this->activeRects = 2;
+	generateRect(100, 300, 100, 125, 1);
+	generateRect(400, 300, 100, 125, 2);
+	this->activeRects = 3;
 	this->currentStage = 2;
 }
 
@@ -36,10 +37,12 @@ void Map::switchStage() {
 	clearRects();
 	switch (this->currentStage) {
 	case 1:
+		this->stageOneComplete = true;
 		stageTwo();
 		break;
 	default:
 		std::cout << "Something went very wrong, or the level is not yet implemented." << std::endl;
+		this->currentStage = 666;
 		break;
 	} //end switch statement
 	std::cout << "Level "<< this->currentStage << " Loaded" << std::endl;
@@ -75,8 +78,8 @@ SDL_Rect* Map::getRect(int pos) {
 
 //Check collision
 bool Map::checkOccupied(int xPos, int yPos) { //positions are the wanted positons, not the current ones
-	bool widthOccupied = false;
-	bool heightOccupied = false;
+	//bool widthOccupied = false;
+	//bool heightOccupied = false;
 	for (int i = 0; i < this->activeRects; ++i) {
 		for (int j = getRect(i)->x; j < getRect(i)->x + getRect(i)->w; j += 25) { //25 is the velocity of the snake
 			for (int k = getRect(i)->y; k < getRect(i)->y + getRect(i)->h; k += 25) { //25 is the velocity of the snake
