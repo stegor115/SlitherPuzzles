@@ -17,7 +17,7 @@ Game::~Game() {
 }
 //TO-DO-------------------------------------------------------------------------------
 // Add gravity
-// Make retrival of food change map.
+// MAYBE: Add key to open a door to reach the food?
 //------------------------------------------------------------------------------------
 
 //KNOWN BUGS-------------------------------------------------------------------------------
@@ -60,95 +60,26 @@ void Game::handleEvents() {
 		case SDLK_w: //Debug movement to go upward
 		case SDLK_UP:
 			if (this->devMode) { //Only possible if Dev mode is on
-				if (playerSnake->getHeadY() - playerSnake->getVelocity() >= 0) { //Check off screen
-					eventOccured();
-					playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
-				} //end if
-			}
+				playerSnake->moveUp(0); //Top of screen is x = 0.
+			} //end if
 			break;
 		case SDLK_s:
 		case SDLK_DOWN:
-			if (playerSnake->getHeadY() + playerSnake->getVelocity() < this->windowHeight) { //Check off screen
-				if (!myMap->checkOccupied(playerSnake->getHeadX(), playerSnake->getHeadY() + playerSnake->getVelocity())) { //Check if map is in the way
-					for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
-						if (playerSnake->getHeadY() + playerSnake->getVelocity() == playerSnake->getTailY(i)
-							&& playerSnake->getHeadX() == playerSnake->getTailX(i)) {
-							std::cout << "Downward movement obstructed by tail." << std::endl;
-							tailObstruct = true;
-						} //end if
-					} //end for
-					if (!tailObstruct) {
-						eventOccured();
-						playerSnake->setHeadY(playerSnake->getHeadY() + playerSnake->getVelocity());
-					} //end tail obstruction if
-				} //end map collision if
-			} //end off-screen if
+			if (!myMap->checkOccupied(playerSnake->getHeadX(), playerSnake->getHeadY() + playerSnake->getVelocity())) { //Check if map is in the way, also had issues moving this into moveDown()
+				playerSnake->moveDown(this->windowHeight);
+			} //end map collision if
 			break;
 		case SDLK_a:
 		case SDLK_LEFT:
-			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The mechanic of the snake climbing it's own tail is here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-			if (playerSnake->getHeadX() - playerSnake->getVelocity() >= 0) { //Check off screen
-				if (!myMap->checkOccupied(playerSnake->getHeadX() - playerSnake->getVelocity(), playerSnake->getHeadY())) { //Check if map is in the way
-					for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
-						if (playerSnake->getHeadX() - playerSnake->getVelocity() == playerSnake->getTailX(i)) {
-							if (playerSnake->getHeadY() - playerSnake->getVelocity() == playerSnake->getTailY(i)) {
-								std::cout << "Leftward movement obstructed by tail." << std::endl;
-								tailObstruct = true;
-							} //end if
-							else {
-								if (playerSnake->getHeadX() - playerSnake->getVelocity() == playerSnake->getTailX(i)
-									&& playerSnake->getHeadY() == playerSnake->getTailY(i)
-									&& !tailObstruct) {
-									tailClimb = true;
-								}
-							} //end else
-						} //end if
-					} //end for
-					if (tailClimb) {
-						eventOccured();
-						playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
-						playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
-						std::cout << "Climbed tail via leftward movement." << std::endl;
-					} //end if
-					else if (!tailObstruct) {
-						eventOccured();
-						playerSnake->setHeadX(playerSnake->getHeadX() - playerSnake->getVelocity());
-					} //end if
-				} //end map collision if
-			} //end off screen if
+			if (!myMap->checkOccupied(playerSnake->getHeadX() - playerSnake->getVelocity(), playerSnake->getHeadY())) { //Check if map is in the way
+				playerSnake->moveLeft(0); //Left border of screen is y = 0
+			} //end map collision if
 			break;
 		case SDLK_d:
 		case SDLK_RIGHT:
-			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The mechanic of the snake climbing it's own tail is here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-			if (playerSnake->getHeadX() + playerSnake->getVelocity() < this->windowWidth) { //Check off screen
-				if (!myMap->checkOccupied(playerSnake->getHeadX() + playerSnake->getVelocity(), playerSnake->getHeadY())) { //Check if map is in the way
-					for (int i = 0; i < playerSnake->getTailLength(); ++i) { //Check if tail is in the way
-						if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)) {
-							if (playerSnake->getHeadY() - playerSnake->getVelocity() == playerSnake->getTailY(i)) {
-								std::cout << "Rightward movement obstructed by tail." << std::endl;
-								tailObstruct = true;
-							} //end if
-							else {
-								if (playerSnake->getHeadX() + playerSnake->getVelocity() == playerSnake->getTailX(i)
-									&& playerSnake->getHeadY() == playerSnake->getTailY(i)
-									&& !tailObstruct) {
-									tailClimb = true;
-								}
-							} //end else
-						} //end if
-					} //end for
-					if (tailClimb) {
-						eventOccured();
-						playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
-						playerSnake->setHeadY(playerSnake->getHeadY() - playerSnake->getVelocity());
-						std::cout << "Climbed tail via rightward movement." << std::endl;
-					} //end if
-					else if (!tailObstruct) {
-						eventOccured();
-						playerSnake->setHeadX(playerSnake->getHeadX() + playerSnake->getVelocity());
-					} //end if
-				} //end map collision if
-			} //end off screen if
+			if (!myMap->checkOccupied(playerSnake->getHeadX() + playerSnake->getVelocity(), playerSnake->getHeadY())) { //Check if map is in the way
+				playerSnake->moveRight(this->windowWidth);
+			} //end map collision if
 			break;
 		case SDLK_r:
 			//Restart Level
@@ -156,13 +87,6 @@ void Game::handleEvents() {
 			playerSnake->hideTail();
 			break;
 		case SDLK_BACKQUOTE:
-			/*
-			List of Activated Actions-----------------------------
-			Movement Up via W or Up Arrow
-			List of Activated Commands----------------------------
-			help
-			map <number>
-			*/
 			toggleDev();
 			break;
 		case SDLK_RETURN: //Enter Key
@@ -171,7 +95,6 @@ void Game::handleEvents() {
 			} //end if
 			break;
 		} //end inner switch statement
-
 		break; //Stops potential run on to SDL_QUIT
 	case SDL_QUIT:
 		isRunning = false;
@@ -181,7 +104,7 @@ void Game::handleEvents() {
 	} //end outer switch statement
 
 	//Special Events-----------------------------------------
-	if (foodGoal->gotFood(playerSnake->getHeadX(), playerSnake->getHeadY())) {
+	if (foodGoal->gotFood(playerSnake->getHeadX(), playerSnake->getHeadY())) { //Getting food
 		myMap->switchStage();
 		playerSnake->spawn();
 	} //end if
@@ -239,6 +162,7 @@ void Game::issueCommand() {
 	int num;
 	std::cout << "Enter Command:" << std::endl;
 	std::cin >> command;
+	//Change the following to a switch case at some point
 	if (command == "map") { //Manual map switching
 		std::cin >> num;
 		if (num == 1) {

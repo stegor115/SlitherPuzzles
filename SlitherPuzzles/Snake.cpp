@@ -91,19 +91,116 @@ int Snake::getVelocity() {
 	return this->velocity;
 }
 
+//Movement
+void Snake::moveUp(int windowLimit) {
+	if (this->snakeHead.y - this->velocity >= windowLimit) { //Check off screen
+		moveTail();
+		this->snakeHead.y = this->snakeHead.y - this->velocity;
+	} //end if
+}
+
+void Snake::moveDown(int windowLimit) {
+	bool tailObstruct = false;
+	bool tailClimb = false;;
+		if (this->snakeHead.y + this->velocity < windowLimit) { //Check off screen
+				for (int i = 0; i < this->tailLength; ++i) { //Check if tail is in the way
+					if (this->snakeHead.y + this->velocity == this->snakeTail[i].y && this->snakeHead.x == this->snakeTail[i].x) {
+						std::cout << "Downward movement obstructed by tail." << std::endl;
+						tailObstruct = true;
+					} //end if
+				} //end for
+				if (!tailObstruct) {
+					moveTail();
+					this->snakeHead.y = this->snakeHead.y + this->velocity;
+				} //end tail obstruction if
+		} //end off-screen if
+}
+
+void Snake::moveRight(int windowLimit) {
+	bool tailObstruct = false;
+	bool tailClimb = false;
+	if (this->snakeHead.x + this->velocity < windowLimit) { //Check off screen
+			for (int i = 0; i < this->tailLength; ++i) { //Check if tail is in the way
+				if (this->snakeHead.x + this->velocity == this->snakeTail[i].x) {
+					if (this->snakeHead.y - this->velocity == this->snakeTail[i].y) {
+						std::cout << "Rightward movement obstructed by tail." << std::endl;
+						tailObstruct = true;
+					} //end if
+					else {
+						if (this->snakeHead.x + this->velocity == this->snakeTail[i].x && this->snakeHead.y == this->snakeTail[i].y && !tailObstruct) {
+							tailClimb = true;
+						} //end if
+					} //end else
+				} //end if
+			} //end for
+			if (tailClimb) {
+				moveTail();
+				this->snakeHead.x = this->snakeHead.x + this->velocity;
+				this->snakeHead.y = this->snakeHead.y - this->velocity;
+				std::cout << "Climbed tail via rightward movement." << std::endl;
+			} //end if
+			else if (!tailObstruct) {
+				moveTail();
+				this->snakeHead.x = this->snakeHead.x + this->velocity;
+			} //end if
+	} //end off screen if
+}
+
+void Snake::moveLeft(int windowLimit) {
+	bool tailObstruct = false;
+	bool tailClimb = false;
+	if (this->snakeHead.x - this->velocity >= windowLimit) { //Check off screen
+			for (int i = 0; i < this->tailLength; ++i) { //Check if tail is in the way
+				if (this->snakeHead.x - this->velocity == this->snakeTail[i].x) {
+					if (this->snakeHead.y - this->velocity == this->snakeTail[i].y) {
+						std::cout << "Leftward movement obstructed by tail." << std::endl;
+						tailObstruct = true;
+					} //end if
+					else {
+						if (this->snakeHead.x - this->velocity == this->snakeTail[i].x && this->snakeHead.y == this->snakeTail[i].y && !tailObstruct) {
+							tailClimb = true;
+						} //end if
+					} //end else
+				} //end if
+			} //end for
+			if (tailClimb) {
+				moveTail();
+				this->snakeHead.x = this->snakeHead.x - this->velocity;
+				this->snakeHead.y = this->snakeHead.y - this->velocity;
+				std::cout << "Climbed tail via leftward movement." << std::endl;
+			} //end if
+			else if (!tailObstruct) {
+				moveTail();
+				this->snakeHead.x = this->snakeHead.x - this->velocity;
+			} //end if
+	} //end off screen if
+}
+
+//Tail handling
+void Snake::moveTail() {
+	for (int i = 0; i < this->tailLength; ++i) {
+		this->setRect2Rect(this->getTail(i), this->getTail(i + 1));
+	} //end for
+	if (this->getTailLength() != 0) {
+		this->setRect2Rect(this->getTail(this->getTailLength() - 1), this->getHead());
+	} //end if
+}
+
 //Spawn
 void Snake::spawn() { //Always spawns snake in the same position
-	setHeadX(0);
-	setHeadY(400);
-	setSize(25);
-	setVelocity(25);
+	this->snakeHead.x = 0;
+	this->snakeHead.y = 400;
+	this->snakeHead.w = 25;
+	this->snakeHead.h = 25;
+	this->velocity = 25;
 	hideTail();
 }
 
-void Snake::spawn(int xPos, int yPos) { //Spawns snake in a custom position if desired
-	setHeadX(xPos);
-	setHeadY(yPos);
-	setSize(25);
-	setVelocity(25);
+void Snake::spawn(int xPos, int yPos) { //Spawns snake in a custom position if desire
+	this->snakeHead.x = xPos;
+	this->snakeHead.y = yPos;
+	this->snakeHead.w = 25;
+	this->snakeHead.h = 25;
+	this->velocity = 25;
 	hideTail(); //This might look weird if not spawned on the edge of the screen, might need a solution?
 }

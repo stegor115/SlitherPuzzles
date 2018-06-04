@@ -1,3 +1,4 @@
+#include <iostream>
 #include "SDL.h"
 
 class Snake {
@@ -21,6 +22,14 @@ public:
 	//Speed
 	void setVelocity(int value);
 	int getVelocity();
+	//Movement
+	//Clean up the below so less function calls happen
+	void moveUp(int windowLimit);
+	void moveDown(int windowLimit);
+	void moveLeft(int windowLimit);
+	void moveRight(int windowLimit);
+	//Handle Tail
+	void moveTail();
 	//Spawn
 	void spawn(); //Default spawn location
 	void spawn(int xPos, int yPos); //Customizable spawn location if desired
