@@ -176,6 +176,11 @@ void Game::issueCommand() {
 			myMap->stageTwo();
 			std::cout << "Stage " << num << " Loaded" << std::endl;
 			break;
+		case 3:
+			myMap->clearRects();
+			myMap->stageThree();
+			std::cout << "Stage " << num << " Loaded" << std::endl;
+			break;
 		default:
 			std::cout << "Stage " << num << " does not exist." << std::endl;
 			break;

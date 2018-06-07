@@ -4,9 +4,11 @@ class Map {
 public:
 	Map();
 	~Map();
-	//Map generation
+	//Stages
 	void stageOne();
 	void stageTwo();
+	void stageThree();
+	//Other map generation info
 	void switchStage();
 	void clearRects(); //Throws rects off screen to be rearranged
 	void generateRect(int xPos, int yPos, int width, int height, int pos);
@@ -25,5 +27,6 @@ private:
 	//Rectangle info
 	int rectCount = 20;
 	int activeRects = 0;
+	bool hasBarrier = false;
 	SDL_Rect mapRects[20]; //Increase as needed
 };

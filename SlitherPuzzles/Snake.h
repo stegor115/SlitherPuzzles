@@ -6,6 +6,7 @@ public:
 	Snake();
 	~Snake();
 	//Set/Get X and Y
+	//Some of these functions might be redundant, keep until known for sure they are.
 	void setHeadX(int value);
 	void setHeadY(int value);
 	void setTailX(int pos, int value);

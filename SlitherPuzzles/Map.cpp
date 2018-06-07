@@ -14,23 +14,30 @@ Map::~Map() {
 //Important Note: Active Rects needs to be correct, otherwise the snake has no collision detection of preceding rectangles.
 //Map generation
 void Map::stageOne() {
-	//First rectangle
-	generateRect(0, 425, 600, 175, 0);
+	generateRect(0, 425, 600, 175, 0); //Ground level rectangle
 	//Center blocking rectangle
 	generateRect(250, 400, 100, 25, 1);
 	generateRect(275, 375, 50, 25, 2);
 	this->activeRects = 3;
 	this->currentStage = 1;
+	this->hasBarrier = false;
 }
 
 void Map::stageTwo() {
-	//Ground level rectangle
-	generateRect(0, 425, 600, 175, 0);
-	//Temporary Massive Blocking Rectangle
+	generateRect(0, 425, 600, 175, 0); //Ground level rectangle
 	generateRect(100, 300, 100, 125, 1);
 	generateRect(400, 300, 100, 125, 2);
 	this->activeRects = 3;
 	this->currentStage = 2;
+	this->hasBarrier = false;
+}
+
+void Map::stageThree() {
+	generateRect(0, 425, 600, 175, 0);
+	generateRect(550, 0, 25, 425, 1); //Replace with barrier object
+	this->activeRects = 2;
+	this->currentStage = 3;
+	this->hasBarrier = true;
 }
 
 void Map::switchStage() {
@@ -39,6 +46,10 @@ void Map::switchStage() {
 	case 1:
 		this->stageOneComplete = true;
 		stageTwo();
+		break;
+	case 2:
+		this->stageTwoComplete = true;
+		stageThree();
 		break;
 	default:
 		std::cout << "Something went very wrong, or the level is not yet implemented." << std::endl;
@@ -78,8 +89,6 @@ SDL_Rect* Map::getRect(int pos) {
 
 //Check collision
 bool Map::checkOccupied(int xPos, int yPos) { //positions are the wanted positons, not the current ones
-	//bool widthOccupied = false;
-	//bool heightOccupied = false;
 	for (int i = 0; i < this->activeRects; ++i) {
 		for (int j = getRect(i)->x; j < getRect(i)->x + getRect(i)->w; j += 25) { //25 is the velocity of the snake
 			for (int k = getRect(i)->y; k < getRect(i)->y + getRect(i)->h; k += 25) { //25 is the velocity of the snake
