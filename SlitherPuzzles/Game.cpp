@@ -165,20 +165,22 @@ void Game::issueCommand() {
 	//Change the following to a switch case at some point
 	if (command == "map") { //Manual map switching
 		std::cin >> num;
-		if (num == 1) {
+		switch (num) {
+		case 1:
 			myMap->clearRects();
 			myMap->stageOne();
 			std::cout << "Stage " << num << " Loaded" << std::endl;
-		} //end if
-		else if (num == 2) {
+			break;
+		case 2:
 			myMap->clearRects();
 			myMap->stageTwo();
 			std::cout << "Stage " << num << " Loaded" << std::endl;
-		} //end else if
-		else {
+			break;
+		default:
 			std::cout << "Stage " << num << " does not exist." << std::endl;
-		}
-	}//end map if
+			break;
+		}//end map switch statement
+	} //end map if statement
 	else if (command == "help") { //Command List
 		std::cout << "help - Provides list of all available commands." << std::endl;
 		std::cout << "map <number> - Loads map based on the number." << std::endl;
